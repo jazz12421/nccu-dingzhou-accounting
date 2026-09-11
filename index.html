@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>台南頂洲隊 · 總務核銷導引系統</title>
+  <title>台南頂洲隊 · 職位分流核銷導引系統</title>
   <style>
     :root {
       --primary: #1e3a8a;
@@ -22,7 +22,7 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Noto Sans TC", sans-serif; }
     body { background: #f8fafc; color: var(--text); line-height: 1.6; padding: 1.5rem 1rem 4rem; }
-    .container { max-width: 800px; margin: 0 auto; }
+    .container { max-width: 840px; margin: 0 auto; }
 
     header { text-align: center; margin-bottom: 2rem; }
     h1 { font-size: 1.75rem; color: var(--primary); margin-bottom: 0.25rem; }
@@ -58,34 +58,36 @@
     }
     .tax-code-box:hover { background: #fef3c7; }
 
-    /* 身分分頁 */
-    .tabs {
-      display: flex;
+    /* 三大角色切換分頁 */
+    .role-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
       background: #e2e8f0;
-      padding: 4px;
-      border-radius: 10px;
-      margin-bottom: 1.5rem;
+      padding: 5px;
+      border-radius: 12px;
+      margin-bottom: 1.75rem;
+      gap: 4px;
     }
-    .tab-btn {
-      flex: 1;
-      padding: 0.75rem;
+    .role-btn {
+      padding: 0.85rem 0.5rem;
       border: none;
       background: transparent;
       border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.95rem;
+      font-weight: 700;
+      font-size: 1rem;
       color: var(--muted);
       cursor: pointer;
-      transition: 0.2s;
+      text-align: center;
+      transition: all 0.2s;
     }
-    .tab-btn.active {
+    .role-btn.active {
       background: #ffffff;
       color: var(--primary);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
     }
 
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
+    .role-view { display: none; }
+    .role-view.active { display: block; }
 
     /* 卡片通用樣式 */
     .section-card {
@@ -94,9 +96,9 @@
       border-radius: var(--border-radius);
       padding: 1.5rem;
       margin-bottom: 1.5rem;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
     }
-    .section-card h2 { font-size: 1.15rem; margin-bottom: 1rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; }
+    .section-card h2 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; }
 
     /* 步驟清單 */
     .step-list { list-style: none; counter-reset: step-counter; }
@@ -137,7 +139,7 @@
       background: #ffffff;
       border: 1px solid #cbd5e1;
       border-radius: 6px;
-      padding: 0.2rem 0.5rem;
+      padding: 0.25rem 0.6rem;
       font-size: 0.75rem;
       cursor: pointer;
       color: var(--accent);
@@ -170,7 +172,7 @@
       font-weight: 600;
     }
 
-    /* 動態詳情面板 */
+    /* 動態面板 */
     .cat-detail {
       display: none;
       background: #f8fafc;
@@ -218,35 +220,11 @@
     th, td { border: 1px solid var(--border); padding: 0.65rem; text-align: left; }
     th { background: #f1f5f9; font-weight: 600; }
 
-    /* 簡易拆帳小工具 */
-    .calc-box {
-      background: #f3f4f6;
-      border-radius: 8px;
-      padding: 1rem;
-      margin-top: 1rem;
-    }
-    .calc-input-group {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 0.75rem;
-    }
-    .calc-input-group input {
-      flex: 1;
-      padding: 0.5rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 0.95rem;
-    }
-    .calc-input-group button {
-      padding: 0.5rem 1rem;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .calc-result { font-size: 0.9rem; color: #1e3a8a; }
+    /* 簡易計算機 */
+    .calc-box { background: #f3f4f6; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+    .calc-input-group { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .calc-input-group input { flex: 1; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; }
+    .calc-input-group button { padding: 0.5rem 1rem; background: var(--accent); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -254,10 +232,10 @@
 <div class="container">
   <header>
     <h1>國立政治大學 台南頂洲隊</h1>
-    <div class="subtitle">總務核銷與黏存單互動導引手冊</div>
+    <div class="subtitle">總務核銷與經費管理系統</div>
   </header>
 
-  <!-- 頂部統編防呆 -->
+  <!-- 統編橫幅 -->
   <div class="tax-banner">
     <div class="tax-text">⚠️ 採買或開立發票請務必打政大統編：</div>
     <div class="tax-code-box" onclick="copyText('03807654', '已複製政大統編！')">
@@ -266,32 +244,32 @@
     </div>
   </div>
 
-  <!-- 身分切換 -->
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('member')">🙋 隊員／支出人（買完報帳）</button>
-    <button class="tab-btn" onclick="switchTab('admin')">📋 總務股（試算表、黏存單與送審）</button>
+  <!-- 三大角色切換按鈕 -->
+  <div class="role-tabs">
+    <button class="role-btn active" onclick="switchRole('member')">🙋 隊員專區</button>
+    <button class="role-btn" onclick="switchRole('captain')">👑 隊長專區</button>
+    <button class="role-btn" onclick="switchRole('admin')">📋 總務專區</button>
   </div>
 
-  <!-- 分頁 1：隊員支出流程 -->
-  <div id="tab-member" class="tab-content active">
-    
+  <!-- ==================== 1. 隊員專區 ==================== -->
+  <div id="view-member" class="role-view active">
     <div class="section-card">
-      <h2>📸 支出人必做：發票處理 4 步驟</h2>
+      <h2>📸 買完立刻做：發票上傳 4 步驟</h2>
       <ol class="step-list">
         <li class="step-item">
-          <strong>重抄發票號碼</strong>：統一發票空白處以原子筆手寫重抄一次發票號碼（避免感熱紙受熱褪色被學校退件）。
+          <strong>手寫重抄發票號碼</strong>：於統一發票空白處拿原子筆抄寫號碼，防感熱紙褪色被課外組退件。
         </li>
         <li class="step-item">
-          <strong>簽寫全名</strong>：於發票空白處簽上自己的本名。
+          <strong>簽署真實姓名</strong>：發票空白處簽上自己的全名。
         </li>
         <li class="step-item">
-          <strong>標註核銷分類</strong>：手寫對應的類別（籌會茶水 / 個人教案 / 小教案 / 活動教案 / 職務用品 / 交通 / 禮品 / 其他）。
+          <strong>寫上報帳分類</strong>：寫清楚類別（茶水 / 教案 / 獎品 / 餐費 / 車票 / 職務用品）。
         </li>
         <li class="step-item">
-          <strong>拍照並上傳 DC 核銷相簿</strong>
+          <strong>拍照回傳 DC 核銷相簿</strong>
           <div class="copy-box">
-            <button class="copy-btn" onclick="copyText('09/22 潘依慈（隊費） 麥當勞 955元', '已複製格式範例')">複製範本</button>
-            <strong>回報標準格式：</strong><br>
+            <button class="copy-btn" onclick="copyText('09/22 潘依慈（隊費） 麥當勞 955元', '已複製回報格式')">複製範本</button>
+            <strong>上傳回報格式：</strong><br>
             <code>日期 支出人（隊費） 買了什麼 金額</code><br>
             <span style="color:var(--muted)">例：09/22 潘依慈（隊費） 麥當勞 955元</span>
           </div>
@@ -299,186 +277,196 @@
       </ol>
     </div>
 
-    <!-- 類別切換導引 -->
     <div class="section-card">
-      <h2>🔍 點選你的支出類別（檢視規定與範本）</h2>
+      <h2>🔍 點選你的支出項目（常見規定速查）</h2>
       <div class="category-chips">
         <button class="chip-btn active" onclick="showCategory('tea')">🍵 籌會茶水</button>
         <button class="chip-btn" onclick="showCategory('lesson')">📚 教案教具</button>
-        <button class="chip-btn" onclick="showCategory('gift')">🎁 獎品禮品</button>
-        <button class="chip-btn" onclick="showCategory('meal')">🍱 營期餐費</button>
         <button class="chip-btn" onclick="showCategory('traffic')">🚆 交通車票</button>
+        <button class="chip-btn" onclick="showCategory('gift')">🎁 獎品禮品</button>
       </div>
 
       <!-- 籌會茶水 -->
       <div id="cat-tea" class="cat-detail active">
-        <h3>🍵 籌會茶水規範</h3>
-        <div class="alert-box">🚨 必備要件：必須檢附「與會人員名單、人數、時間、日期、發票號碼」！</div>
-        <p style="font-size:0.875rem;">若為免用發票收據，則不需填發票號碼，但仍需詳細人員名單與收據章。</p>
+        <h3>🍵 籌會茶水回報需知</h3>
+        <div class="alert-box">🚨 學校硬性規定：茶水點心「必須附上完整與會人員名單」！</div>
         <div class="copy-box">
-          <button class="copy-btn" onclick="copyText('09/22 籌會茶水 19:30–21:30 955元\n人數：12人 發票號碼：SC-20985342\n名單：鄭允妍 汪吟樺 周銘嵩 林潔希 潘依慈 林峻右 黃薇年 曾芷琪 曾凱琳 劉政鑫 林哲卉 高婕恩', '已複製茶水名單範例')">複製範本</button>
-          <strong>黏存單/相簿格式範本：</strong><br>
+          <button class="copy-btn" onclick="copyText('09/22 籌會茶水 19:30–21:30 955元\n人數：12人 發票號碼：SC-20985342\n名單：鄭允妍 汪吟樺 周銘嵩 林潔希 潘依慈 林峻右 黃薇年 曾芷琪 曾凱琳 劉政鑫 林哲卉 高婕恩', '已複製格式')">複製名單範本</button>
+          <strong>上傳相簿範本：</strong><br>
           09/22 籌會茶水 19:30–21:30 955元<br>
           人數：12人 發票號碼：SC-20985342<br>
-          名單：鄭允妍 汪吟樺 周銘嵩 林潔希 潘依慈 林峻右...
+          名單：鄭允妍 汪吟樺 周銘嵩 林潔希 潘依慈...
         </div>
       </div>
 
       <!-- 教案教具 -->
       <div id="cat-lesson" class="cat-detail">
-        <h3>📚 教案教具規範</h3>
-        <div class="alert-box">⚠️ 請標記具體教案名稱（例：寫「烹飪教案」而非「烹飪」，避免被會計判定為餐費）！</div>
+        <h3>📚 教案教具需知</h3>
+        <div class="alert-box">⚠️ 寫「烹飪教案」而非「烹飪」，避免被會計判定為一般餐費！</div>
         <ul style="font-size:0.9rem; padding-left:1.2rem;">
-          <li>清楚寫出是哪個組別或教案所用（如：中自然、高藝術、活動教案）。</li>
-          <li><strong>品名防呆：</strong>若發票上只籠統打印「文具」或「生活百貨」，必須以原子筆在旁逐筆手寫補齊實際品項（如：剪刀、雙面膠帶）。</li>
+          <li>寫清楚哪個組別買的（如：中自然、高藝術、活動教案）。</li>
+          <li>發票明細若寫「文具」，必須在旁邊逐一手寫註明（如：剪刀、膠帶）。</li>
+        </ul>
+      </div>
+
+      <!-- 交通車票 -->
+      <div id="cat-traffic" class="cat-detail">
+        <h3>🚆 交通車票需知</h3>
+        <div class="alert-box">⚠️ 搭完車立刻將實體車票收好交給總務！</div>
+        <ul style="font-size:0.875rem; padding-left:1.2rem; margin-bottom:0.5rem;">
+          <li><strong>火車：</strong>實體票根全額核銷（若出站走人工道請蓋章）。</li>
+          <li><strong>高鐵：</strong>只能核銷同區間火車票價（新營－終點），請附購票證明。</li>
+          <li><strong>計程車：</strong>需有收據、車牌、司機名。事由統一寫：
+            <br>• 北車－住家：<code>載大型教具</code>
+            <br>• 新營－頂洲：<code>載營期四日餐食材料</code>
+          </li>
         </ul>
       </div>
 
       <!-- 獎品禮品 -->
       <div id="cat-gift" class="cat-detail">
-        <h3>🎁 獎品 / 禮品規範</h3>
-        <div class="alert-box">🚨 禮品需附致贈名單；獎品需附小朋友得獎名單與活動事由！</div>
-        <table>
-          <tr><th>項目</th><th>預算上限</th><th>必備附件與規定</th></tr>
-          <tr><td>貴賓/長官禮品</td><td>最多 2 份 × 500元</td><td>致贈名單（含對象、活動名稱、時間、地點、緣由）</td></tr>
-          <tr><td>學童獎品</td><td>每位小朋友上限 500元</td><td>獲獎小朋友名單清冊（約 10–20 位學童）</td></tr>
-        </table>
-        <div class="copy-box" style="margin-top:0.75rem;">
-          <button class="copy-btn" onclick="copyText('校長：方啟丞 主任：施述巽\n活動名稱：結業典禮\n活動時間：115/02/06 15:00 頂洲國小視聽教室\n獎品緣由：獎勵學童認真參與營隊活動', '已複製禮品餽贈範本')">複製禮品範本</button>
-          <strong>禮品餽贈名單格式：</strong><br>
-          校長：方啟丞 主任：施述巽<br>
-          活動名稱：結業典禮<br>
-          活動時間：115/02/06 15:00 頂洲國小視聽教室<br>
-          獎品緣由：獎勵學童認真參與
-        </div>
-      </div>
-
-      <!-- 營期餐費 -->
-      <div id="cat-meal" class="cat-detail">
-        <h3>🍱 營期餐費規範</h3>
-        <div class="alert-box">🚨 必須附上用餐人員名單！收據免發票號碼，但需蓋免用發票章與負責人章。</div>
-        <div class="info-box">
-          <strong>💡 全聯／大額食材發票計算原則（總務核銷時使用）：</strong><br>
-          1. 計算總共餐數（n 餐）。<br>
-          2. 每餐固定扣除 1,440 元，剩餘部分單獨分批核銷。
-        </div>
-
-        <!-- 簡易拆帳工具 -->
-        <div class="calc-box">
-          <strong>🧮 全聯發票速算器</strong>
-          <div class="calc-input-group" style="margin-top:0.5rem;">
-            <input type="number" id="mealTotal" placeholder="輸入發票總金額（例如 5000）">
-            <button onclick="calculateMeal()">計算拆帳</button>
-          </div>
-          <div id="calcOutput" class="calc-result"></div>
-        </div>
-      </div>
-
-      <!-- 交通車票 -->
-      <div id="cat-traffic" class="cat-detail">
-        <h3>🚆 交通車票規範</h3>
-        <div class="alert-box">⚠️ 搭完車請立即將「實體票根」收齊交給總務，勿讓隊員各自保管以免遺失！</div>
-        <ul style="font-size:0.875rem; padding-left:1.2rem; margin-bottom:0.5rem;">
-          <li><strong>火車票：</strong>全額核銷，必須繳回實體票根（若出站走人工走道請站務員蓋證明章）。</li>
-          <li><strong>高鐵票：</strong>學校僅核銷同段「火車票價」（新營－各終點站），需提供搭乘證明。</li>
-          <li><strong>計程車費用：</strong>需有收據、車牌號碼、司機姓名，並填寫合規事由。</li>
-        </ul>
-        <div class="copy-box">
-          <button class="copy-btn" onclick="copyText('載大型教具', '已複製事由')">複製事由 1</button>
-          <strong>計程車事由 1（台北車站－住家）：</strong><br>
-          <code>載大型教具</code>
-        </div>
-        <div class="copy-box">
-          <button class="copy-btn" onclick="copyText('載營期四日餐食材料', '已複製事由')">複製事由 2</button>
-          <strong>計程車事由 2（新營車站－頂洲國小）：</strong><br>
-          <code>載營期四日餐食材料</code>
-        </div>
+        <h3>🎁 獎品禮品需知</h3>
+        <p style="font-size:0.9rem;">貴賓禮品上限 500 元（最多 2 份）；小朋友獎品每位上限 500 元。買完請向隊長確認得獎/致贈清冊名單。</p>
       </div>
     </div>
   </div>
 
-  <!-- 分頁 2：總務行政流程 -->
-  <div id="tab-admin" class="tab-content">
-    
+  <!-- ==================== 2. 隊長專區 ==================== -->
+  <div id="view-captain" class="role-view">
+    <div class="section-card">
+      <h2>👑 隊長審核與名冊把關重點</h2>
+      <div class="info-box">
+        作為隊長，出件送審前需把關活動與人員清冊，避免課外組因名單不齊退件：
+      </div>
+      <ul style="font-size:0.95rem; padding-left:1.2rem; margin-bottom:1rem;">
+        <li><strong>茶水與餐費名冊確認：</strong>核對籌會名單人數是否與實際簽到相符。</li>
+        <li><strong>營期全聯大額食材：</strong>確認總餐數，監督總務是否依每餐 $1,440 扣除拆帳。</li>
+        <li><strong>校長/主任餽贈禮品：</strong>限兩份（各 500 元以內），需備妥致贈事由函。</li>
+        <li><strong>學童獎品名單：</strong>確認每位小朋友獎品上限 500 元，並附上受獎學生名單（10–20 人）。</li>
+      </ul>
+    </div>
+
+    <div class="section-card">
+      <h2>📄 禮品餽贈標準公文格式</h2>
+      <div class="copy-box">
+        <button class="copy-btn" onclick="copyText('校長：方啟丞 主任：施述巽\n活動名稱：結業典禮\n活動時間：115/02/06 15:00 頂洲國小視聽教室\n獎品緣由：獎勵學童認真參與營隊活動', '已複製禮品名冊')">複製公文範本</button>
+        <strong>致贈名單格式：</strong><br>
+        校長：方啟丞 主任：施述巽<br>
+        活動名稱：結業典禮<br>
+        活動時間：115/02/06 15:00 頂洲國小視聽教室<br>
+        獎品緣由：獎勵學童認真參與營隊活動
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h2>👑 隊長出隊前/後 Checklist</h2>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <span>已確認茶水出席人員與簽到單完整對齊</span>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <span>校長、主任禮品名冊已填妥致贈事由與時間地點</span>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <span>結業式學童獎品清冊已造冊（含姓名、獎項）</span>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <span>確認隊員交通票根均已收齊交給總務</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 3. 總務專區 ==================== -->
+  <div id="view-admin" class="role-view">
     <div class="section-card">
       <h2>📌 預算科目代碼與經費拆分規則</h2>
       <table>
-        <tr><th>預算名稱</th><th>會計代碼</th><th>核銷適用範圍與拆分邏輯</th></tr>
+        <tr><th>預算項目</th><th>會計代碼</th><th>拆帳原則</th></tr>
         <tr>
           <td><strong>頂洲祖產</strong></td>
           <td><code>115DM00-21</code></td>
-          <td>出隊前支出優先使用；或補助款 $10,000 用罄後的剩餘差額。</td>
+          <td>出隊前支出優先使用；或補助款 $10,000 用罄後的剩餘款項。</td>
         </tr>
         <tr>
           <td><strong>課外組補助款</strong></td>
           <td><code>115TM02-3011</code></td>
-          <td>出隊後金額最高的黏存單優先使用（補助上限通常為 10,000 元）。</td>
+          <td>出隊後金額最高的黏存單優先使用（補助款通常為 10,000 元整）。</td>
         </tr>
       </table>
       <div class="info-box" style="margin-top:0.75rem;">
-        <strong>💡 拆分範例：</strong>若總結算金額較高，先將出隊後最大張黏存單拆出剛好 <code>115TM02-3011</code> (10,000元)，剩餘不足或多出金額全部撥至 <code>115DM00-21</code> 頂洲祖產。
+        <strong>拆分邏輯：</strong>若結算金額高，出隊後最大張黏存單拆出 <code>115TM02-3011</code> (10,000元)，剩餘差額皆撥至 <code>115DM00-21</code> 頂洲祖產。
       </div>
     </div>
 
     <div class="section-card">
-      <h2>📄 黏存單黏貼與填寫鐵則</h2>
+      <h2>🧮 全聯發票餐費速算器</h2>
+      <p style="font-size:0.875rem; color:var(--muted)">規則：每餐固定扣除 1,440 元，剩餘款項單獨核銷。</p>
+      <div class="calc-box">
+        <div class="calc-input-group">
+          <input type="number" id="mealTotal" placeholder="輸入發票總金額（例如 5000）">
+          <button onclick="calculateMeal()">計算拆帳</button>
+        </div>
+        <div id="calcOutput" style="font-size:0.9rem; color:#1e3a8a;"></div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h2>📄 黏存單填寫與黏貼規定</h2>
       <ul style="font-size:0.9rem; padding-left:1.2rem;">
-        <li><strong>同類別一張：</strong>同張黏存單只能貼同一類別發票，且每張上限 <strong>10 張</strong>。</li>
-        <li><strong>橫向黏貼：</strong>由左至右橫向排列最多 <strong>3 張</strong>，不可重疊覆蓋字體。</li>
-        <li><strong>大型收據：</strong>大張單據、估價單或名單黏貼於最下方／最底層。</li>
-        <li><strong>塗改處蓋章：</strong>黏存單與發票上有任何畫線塗改，經手人<strong>必須在塗改處旁重新簽名或蓋私章</strong>。</li>
+        <li><strong>分類黏貼：</strong>同類別一張黏存單，每張最多貼 <strong>10 張</strong>。</li>
+        <li><strong>排列原則：</strong>橫向由左至右最多 <strong>3 張</strong>，不可重疊遮蔽文字。</li>
+        <li><strong>塗改簽名：</strong>黏存單或發票上若有任何塗改，經手人<strong>必須在塗改處旁重新簽名或蓋章</strong>。</li>
+        <li><strong>試算表流水號：</strong>試算表填妥後，黏存單右上角需寫上對應編號。</li>
       </ul>
     </div>
 
-    <!-- 送件前檢查表 -->
     <div class="section-card">
-      <h2>✅ 出件前最終檢查清單</h2>
+      <h2>✅ 總務出件前最終核對表</h2>
       <div class="checklist-item" onclick="toggleCheck(this)">
         <input type="checkbox">
-        <span>全數發票已分類，每張黏存單同類別且不超過 10 張發票</span>
+        <span>每張發票皆手寫重抄號碼並簽上經手人姓名</span>
       </div>
       <div class="checklist-item" onclick="toggleCheck(this)">
         <input type="checkbox">
-        <span>每張發票皆手寫重抄發票號碼、經辦人本名簽名</span>
+        <span>發票明細若寫「文具」皆已手寫補齊具體品項</span>
       </div>
       <div class="checklist-item" onclick="toggleCheck(this)">
         <input type="checkbox">
-        <span>發票明細若為籠統字樣（如文具）皆已手寫補齊具體品名</span>
+        <span>每張黏存單同類別且不超過 10 張發票</span>
       </div>
       <div class="checklist-item" onclick="toggleCheck(this)">
         <input type="checkbox">
-        <span>試算表已填寫完畢，黏存單右上角已編寫流水號對應</span>
+        <span>試算表已填寫完畢，黏存單右上角流水號已編妥</span>
       </div>
       <div class="checklist-item" onclick="toggleCheck(this)">
         <input type="checkbox">
-        <span>茶水與餐費均已附齊「出席人員完整名單與簽到」</span>
+        <span>課外組補助款 (115TM02-3011) 與祖產代碼 (115DM00-21) 拆分無誤</span>
       </div>
       <div class="checklist-item" onclick="toggleCheck(this)">
         <input type="checkbox">
-        <span>禮品附致贈事由清單、獎品附學童得獎名單</span>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <input type="checkbox">
-        <span>車票票根齊全，計程車已註明合規事由（載大型教具／餐食材料）</span>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <input type="checkbox">
-        <span>黏存單清冊填妥，凡有筆誤塗改處皆已重新簽名</span>
+        <span>所有名單附件齊全（茶水、餐食、禮品致贈、獎品名冊）</span>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  function switchTab(type) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    if(type === 'member') {
-      document.querySelectorAll('.tab-btn')[0].classList.add('active');
-      document.getElementById('tab-member').classList.add('active');
+  function switchRole(role) {
+    document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.role-view').forEach(view => view.classList.remove('active'));
+    
+    if(role === 'member') {
+      document.querySelectorAll('.role-btn')[0].classList.add('active');
+      document.getElementById('view-member').classList.add('active');
+    } else if(role === 'captain') {
+      document.querySelectorAll('.role-btn')[1].classList.add('active');
+      document.getElementById('view-captain').classList.add('active');
     } else {
-      document.querySelectorAll('.tab-btn')[1].classList.add('active');
-      document.getElementById('tab-admin').classList.add('active');
+      document.querySelectorAll('.role-btn')[2].classList.add('active');
+      document.getElementById('view-admin').classList.add('active');
     }
   }
 
@@ -510,7 +498,7 @@
     }
     const meals = Math.floor(total / 1440);
     const remainder = total % 1440;
-    out.innerHTML = `拆帳結果：<br>• 可拆出 <strong>${meals} 餐</strong> 固定餐費（每餐 $1,440，共 $${meals * 1440} 元）<br>• 剩餘金額 <strong>$${remainder} 元</strong> 需單獨核銷。`;
+    out.innerHTML = `拆帳計算結果：<br>• 可拆出 <strong>${meals} 餐</strong> 固定餐費（每餐 $1,440，共 $${meals * 1440} 元）<br>• 剩餘金額 <strong>$${remainder} 元</strong> 需單獨核銷。`;
   }
 </script>
 </body>
