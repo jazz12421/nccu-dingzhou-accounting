@@ -3,273 +3,317 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>台南頂洲隊 · 詳細職位分流核銷系統</title>
+  <title>台南頂洲隊 · 節點式核銷指南</title>
   <style>
     :root {
       --primary: #1e3a8a;
       --primary-light: #eff6ff;
       --accent: #2563eb;
-      --warning: #d97706;
-      --warning-bg: #fffbeb;
-      --danger: #dc2626;
-      --danger-bg: #fef2f2;
       --text: #1f2937;
       --muted: #6b7280;
-      --card-bg: #ffffff;
       --border: #e5e7eb;
-      --border-radius: 12px;
+      --bg: #f8fafc;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Noto Sans TC", sans-serif; }
-    body { background: #f8fafc; color: var(--text); line-height: 1.6; padding: 1.5rem 1rem 4rem; }
-    .container { max-width: 900px; margin: 0 auto; }
-    header { text-align: center; margin-bottom: 2rem; }
-    h1 { font-size: 1.75rem; color: var(--primary); margin-bottom: 0.25rem; }
-    .subtitle { color: var(--muted); font-size: 0.95rem; font-weight: 500; }
-
-    /* 頂部統編強提醒 */
-    .tax-banner {
-      background: var(--warning-bg);
-      border: 1.5px solid #fde68a;
-      border-radius: var(--border-radius);
-      padding: 1rem 1.25rem;
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 1.75rem; flex-wrap: wrap; gap: 0.75rem;
-    }
-    .tax-text { font-size: 0.95rem; color: #92400e; font-weight: 600; }
-    .tax-code-box {
-      background: #ffffff; border: 1.5px dashed var(--warning);
-      padding: 0.35rem 0.75rem; border-radius: 8px;
-      font-size: 1.15rem; font-weight: 700; color: #b45309;
-      letter-spacing: 1px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem;
-    }
-    .tax-code-box:hover { background: #fef3c7; }
-
-    /* 角色切換 */
-    .role-tabs {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      background: #e2e8f0; padding: 5px; border-radius: 12px; margin-bottom: 1.75rem; gap: 4px;
-    }
-    .role-btn {
-      padding: 0.85rem 0.5rem; border: none; background: transparent;
-      border-radius: 8px; font-weight: 700; font-size: 1rem; color: var(--muted);
-      cursor: pointer; text-align: center; transition: all 0.2s;
-    }
-    .role-btn.active { background: #ffffff; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
-    .role-view { display: none; }
-    .role-view.active { display: block; }
-
-    /* 內容卡片 */
-    .section-card {
-      background: var(--card-bg); border: 1px solid var(--border);
-      border-radius: var(--border-radius); padding: 1.5rem; margin-bottom: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-    }
-    .section-card h2 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; border-bottom: 2px solid var(--primary-light); padding-bottom: 0.5rem; }
-    .section-card h3 { font-size: 1.05rem; margin: 1rem 0 0.5rem 0; color: var(--text); }
-
-    ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; font-size: 0.95rem; }
-    li { margin-bottom: 0.5rem; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { background: var(--bg); color: var(--text); line-height: 1.6; padding: 1.5rem 1rem; }
+    .container { max-width: 600px; margin: 0 auto; background: #fff; min-height: 80vh; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; }
     
-    .alert-box {
-      background: var(--danger-bg); border-left: 4px solid var(--danger);
-      padding: 0.75rem 1rem; font-size: 0.9rem; color: #991b1b; margin-bottom: 1rem; border-radius: 4px;
-    }
-    .info-box {
-      background: var(--primary-light); border-left: 4px solid var(--accent);
-      padding: 0.75rem 1rem; font-size: 0.9rem; color: #1e40af; margin-bottom: 1rem; border-radius: 4px;
-    }
+    /* 頂部導覽與麵包屑 */
+    .header { background: var(--primary); color: white; padding: 1rem 1.5rem; }
+    .header h1 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+    .breadcrumbs { font-size: 0.9rem; color: #cbd5e1; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .crumb { cursor: pointer; transition: color 0.2s; }
+    .crumb:hover { color: white; text-decoration: underline; }
+    .crumb.active { color: white; font-weight: bold; cursor: default; text-decoration: none; }
+    .separator { color: #94a3b8; }
 
-    table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; font-size: 0.9rem; }
-    th, td { border: 1px solid var(--border); padding: 0.65rem; text-align: left; vertical-align: top; }
-    th { background: #f1f5f9; font-weight: 600; }
-    code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace; color: var(--accent); }
+    /* 內容區域 */
+    .content-area { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; gap: 1rem; }
+    
+    /* 節點按鈕清單 */
+    .node-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .node-btn {
+      background: white; border: 2px solid var(--border); padding: 1rem 1.25rem;
+      border-radius: 8px; font-size: 1.05rem; font-weight: 600; color: var(--text);
+      text-align: left; cursor: pointer; transition: all 0.2s;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .node-btn:hover { border-color: var(--accent); background: var(--primary-light); color: var(--accent); transform: translateX(4px); }
+    .node-btn::after { content: '➔'; font-size: 1.2rem; color: #94a3b8; }
+    .node-btn:hover::after { color: var(--accent); }
 
-    /* 複製區塊 */
-    .copy-box {
-      background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px;
-      padding: 1rem; position: relative; font-size: 0.9rem; margin-bottom: 1rem;
+    /* 最終葉面內容 */
+    .leaf-content { font-size: 1rem; color: var(--text); animation: fadeIn 0.3s ease; }
+    .leaf-content p, .leaf-content ul { margin-bottom: 1rem; }
+    .leaf-content ul { padding-left: 1.5rem; }
+    .leaf-content li { margin-bottom: 1rem; }
+    .highlight-box { background: #fffbeb; border-left: 4px solid #d97706; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; color: #92400e; }
+    
+    /* 互動式表單樣式 */
+    .generator-box { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 1.25rem; border-radius: 8px; margin-top: 1rem; }
+    .generator-title { font-weight: bold; color: var(--primary); margin-bottom: 0.75rem; font-size: 1.05rem; }
+    .input-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+    .input-row input { flex: 1; padding: 0.6rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; }
+    .generate-btn { width: 100%; background: var(--accent); color: white; border: none; padding: 0.75rem; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 0.5rem; transition: background 0.2s; }
+    .generate-btn:hover { background: #1d4ed8; }
+
+    /* 返回按鈕 */
+    .back-btn { margin-top: auto; padding-top: 1.5rem; }
+    .back-btn button {
+      width: 100%; background: #f1f5f9; border: 1px solid var(--border);
+      padding: 0.75rem; border-radius: 8px; font-weight: 600; color: var(--muted);
+      cursor: pointer; transition: 0.2s;
     }
-    .copy-btn {
-      position: absolute; top: 0.5rem; right: 0.5rem; background: #ffffff;
-      border: 1px solid #cbd5e1; border-radius: 6px; padding: 0.25rem 0.6rem;
-      font-size: 0.75rem; cursor: pointer; color: var(--accent); font-weight: 600;
-    }
+    .back-btn button:hover { background: #e2e8f0; color: var(--text); }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <header>
-    <h1>國立政治大學 台南頂洲隊</h1>
-    <div class="subtitle">總務核銷指南與經費管理系統</div>
-  </header>
-
-  <div class="tax-banner">
-    <div class="tax-text">⚠️ 買東西當下：務必索取統一發票或免用統一發票收據</div>
-    <div class="tax-code-box" onclick="copyText('03807654', '已複製政大統編！')">
-      <span>統編：03807654</span>
-      <span style="font-size:0.75rem; font-weight:normal; color:var(--muted)">點擊複製</span>
+  <div class="header">
+    <h1>總務核銷指南</h1>
+    <div class="breadcrumbs" id="breadcrumbs">
+      <!-- 麵包屑動態生成 -->
     </div>
   </div>
 
-  <div class="role-tabs">
-    <button class="role-btn active" onclick="switchRole('member')">🙋 隊員（買東西與上傳）</button>
-    <button class="role-btn" onclick="switchRole('captain')">👑 隊長（名單與預算審核）</button>
-    <button class="role-btn" onclick="switchRole('admin')">📋 總務（試算表與黏存單）</button>
-  </div>
-
-  <!-- ==================== 1. 隊員專區 ==================== -->
-  <div id="view-member" class="role-view active">
-    <div class="section-card">
-      <h2>🛒 買東西當下的規定</h2>
-      <ul>
-        <li><strong>統編與買受人：</strong> 若有打統編 (03807654)，買受人可以不寫；若收銀機無法打統編，買受人必須手寫「國立政治大學」。</li>
-        <li><strong>收據要求：</strong> 若為免用統一發票收據，必須蓋有「免用統一發票章」與「負責人小章」。</li>
-      </ul>
-    </div>
-
-    <div class="section-card">
-      <h2>📸 拿到單據後的發票處理（請立刻做）</h2>
-      <ol>
-        <li><strong>防褪色處理：</strong> 於統一發票空白處，拿原子筆重抄一次發票號碼。</li>
-        <li><strong>簽署本名：</strong> 於空白處簽上支出人本名。</li>
-        <li><strong>標註分類：</strong> 寫上報帳分類（如：茶水、教案、交通、禮品）。</li>
-        <li><strong>上傳 DC 紀錄：</strong> 拍照上傳至 Discord 核銷相簿。</li>
-      </ol>
-      <div class="copy-box">
-        <button class="copy-btn" onclick="copyText('日期 支出人（隊費） 買了什麼 金額', '已複製格式')">複製上傳格式</button>
-        <strong>DC 上傳格式：</strong><br>
-        <code>日期 支出人（隊費） 買了什麼 金額</code><br>
-        <span style="color:var(--muted)">範例：09/22 潘依慈（隊費） 麥當勞 955元</span>
-      </div>
-    </div>
-
-    <div class="section-card">
-      <h2>🔍 各分類特殊要求（買錯無法核銷）</h2>
-      <h3>🍵 籌會茶水 / 🍱 餐費</h3>
-      <div class="alert-box">必須檢附詳細名單！包含：日期、時間、人數、發票號碼、與會人員全名。收據則免填發票號碼。</div>
-      
-      <h3>📚 教案與教具</h3>
-      <ul>
-        <li>必須寫清楚是<strong>哪個教案</strong>（例：烹飪教案、高藝術），不可只寫「烹飪」以免被當成一般餐費退件。</li>
-        <li>發票明細若僅印「文具」或「生活用品」，必須手寫補齊具體品項（如：剪刀、色紙）。</li>
-      </ul>
-
-      <h3>🚆 交通車票</h3>
-      <ul>
-        <li><strong>火車：</strong> 實體票根全額核銷（若走人工通道出站，請站務員蓋章）。</li>
-        <li><strong>高鐵：</strong> 僅能核銷同區間的「火車票價」額度。</li>
-        <li><strong>計程車：</strong> 必須索取收據（含車號、司機姓名）。
-          <br>事由標準寫法：北車到住家寫 <code>載大型教具</code>；新營到頂洲寫 <code>載營期四日餐食材料</code>。
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- ==================== 2. 隊長專區 ==================== -->
-  <div id="view-captain" class="role-view">
-    <div class="section-card">
-      <h2>👑 名單與預算審核責任</h2>
-      <div class="info-box">
-        隊長需在總務製表前，確認以下名冊與預算上限是否合規，以免課外組退件。
-      </div>
-      
-      <h3>🎁 貴賓禮品（校長/主任）</h3>
-      <ul>
-        <li><strong>預算上限：</strong> 最多 2 份，每份 500 元以內。</li>
-        <li><strong>必備文件：</strong> 致贈名單清冊，需包含：對象姓名、活動名稱、活動時間、地點、緣由。</li>
-      </ul>
-
-      <h3>🏅 小朋友獎品</h3>
-      <ul>
-        <li><strong>預算上限：</strong> 每位學童最高 500 元。</li>
-        <li><strong>必備文件：</strong> 獲獎名單（約 10~20 位小朋友的姓名清冊）。</li>
-      </ul>
-
-      <h3>📝 茶水與營期餐費名冊</h3>
-      <ul>
-        <li>確認出席人數與簽到表相符，並已將人員名單交給總務。</li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- ==================== 3. 總務專區 ==================== -->
-  <div id="view-admin" class="role-view">
-    <div class="section-card">
-      <h2>📑 試算表與前置文件整理</h2>
-      <ul>
-        <li>每一筆支出都必須登記於「收支明細表」。</li>
-        <li>將同類別且準備貼在同一張黏存單的發票排在一起，計算該張黏存單的總核銷金額。</li>
-        <li>黏存單右上角必須寫上對應的試算表流水編號。</li>
-        <li><strong>營期餐費全聯發票處理：</strong> 先計算總餐數，每餐扣除 1,440 元。剩餘無法整除的餘額，需單獨拆開核銷。</li>
-      </ul>
-    </div>
-
-    <div class="section-card">
-      <h2>📌 會計代碼與經費拆帳規則（最後一次核銷）</h2>
-      <table>
-        <tr>
-          <th style="width: 35%;">課外組補助款 <br><code>115TM02-3011</code></th>
-          <td>
-            <strong>出隊後使用</strong>：挑選金額最高、最大筆的黏存單優先使用此代碼。<br>
-            額度上限：10,000 元。
-          </td>
-        </tr>
-        <tr>
-          <th>頂洲祖產 <br><code>115DM00-21</code></th>
-          <td>
-            <strong>出隊前使用</strong>；或作為補助款 10,000 元用罄後的<strong>餘額補足</strong>。<br>
-            拆帳範例：若總花費 15,000 元，則 10,000 報補助款，剩餘 5,000 報祖產。
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="section-card">
-      <h2>📄 黏存單實作與黏貼規則</h2>
-      <div class="alert-box">任何寫錯塗改的地方，經辦人必須在塗改處旁邊重新簽名或蓋私章！</div>
-      <ul>
-        <li><strong>數量限制：</strong> 同類別發票貼同一張，每張黏存單最多貼 <strong>10 張</strong>發票。</li>
-        <li><strong>黏貼排版：</strong> 由左至右橫向黏貼，最多並排 <strong>3 張</strong>。發票之間不可互相重疊遮蔽字樣。</li>
-        <li><strong>大張單據：</strong> 體積較大的收據、估價單、或 A4 名單，必須黏貼在最底層/最後面。</li>
-        <li><strong>細節欄位：</strong> 計畫名稱填寫「國立政治大學 台南頂洲隊」。金額未填滿的空格請劃掉。左下角需留電話號碼。</li>
-      </ul>
+  <div class="content-area">
+    <div id="dynamic-content">
+      <!-- 按鈕或內容動態生成 -->
     </div>
     
-    <div class="section-card">
-      <h2>✅ 出件至課外組前最終檢查清單</h2>
-      <ul>
-        <li>[ ] 檢查發票是否皆已手寫重抄號碼與簽名。</li>
-        <li>[ ] 確認文具等籠統品項已手寫補齊細項。</li>
-        <li>[ ] 附件名單是否齊全（茶水、餐費、禮品事由、獎品名冊）。</li>
-        <li>[ ] 黏存單清冊是否填寫完畢，且塗改處皆已蓋章。</li>
-      </ul>
+    <div class="back-btn" id="back-btn-container" style="display: none;">
+      <button onclick="goBack()">🔙 返回上一層</button>
     </div>
   </div>
 </div>
 
 <script>
-  function switchRole(role) {
-    document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.role-view').forEach(view => view.classList.remove('active'));
-    
-    if(role === 'member') {
-      document.querySelectorAll('.role-btn')[0].classList.add('active');
-      document.getElementById('view-member').classList.add('active');
-    } else if(role === 'captain') {
-      document.querySelectorAll('.role-btn')[1].classList.add('active');
-      document.getElementById('view-captain').classList.add('active');
-    } else {
-      document.querySelectorAll('.role-btn')[2].classList.add('active');
-      document.getElementById('view-admin').classList.add('active');
+  const mindMapData = {
+    title: "首頁",
+    children: [
+      {
+        title: "隊員",
+        children: [
+          {
+            title: "買東西當下",
+            children: [
+              {
+                title: "有統編",
+                content: "<div class='highlight-box'>⚠️ 政大統編：<strong>03807654</strong></div><ul><li>如果有打統編，買受人可以不寫。</li></ul>"
+              },
+              {
+                title: "沒統編",
+                content: "<ul><li>若收銀機無法打統編，買受人必須手寫「<strong>國立政治大學</strong>」。</li></ul>"
+              },
+              {
+                title: "免用統一發票收據",
+                content: "<ul><li>必須蓋有「<strong>免用統一發票章</strong>」與「<strong>負責人小章</strong>」。</li></ul>"
+              }
+            ]
+          },
+          {
+            title: "發票處理",
+            content: `
+              <ul>
+                <li><strong>防褪色處理：</strong>統一發票請在空白處重抄一次發票號碼（防止感熱紙褪色）。</li>
+                <li><strong>基本資訊填寫：</strong>在空白處簽上<strong>本名</strong>，並寫上對應的<strong>報帳分類</strong>。</li>
+                <li><strong>上傳紀錄：</strong>拍照上傳至 DC 核銷相簿。</li>
+              </ul>
+              
+              <!-- 互動式生成器 -->
+              <div class="generator-box">
+                <div class="generator-title">✍️ 快速生成回報格式</div>
+                <div class="input-row">
+                  <input type="text" id="gen-date" placeholder="日期 (例: 09/22)">
+                  <input type="text" id="gen-name" placeholder="姓名 (例: 潘依慈)">
+                </div>
+                <div class="input-row">
+                  <input type="text" id="gen-item" placeholder="摘要 (例: 麥當勞)">
+                  <input type="number" id="gen-amount" placeholder="金額 (例: 955)">
+                </div>
+                <button class="generate-btn" onclick="generateAndCopy()">✨ 點我生成並複製</button>
+              </div>
+            `
+          }
+        ]
+      },
+      {
+        title: "隊長",
+        children: [
+          {
+            title: "審核各項細節",
+            children: [
+              {
+                title: "茶水與餐費名冊",
+                content: "<ul><li>確保名單與實際簽到或出席人數相符。</li></ul>"
+              },
+              {
+                title: "禮品餽贈名冊",
+                content: "<ul><li>預算上限：最多 2 份，每份最高 500 元。</li><li>需確認致贈校長、主任的緣由與時間地點。</li></ul>"
+              },
+              {
+                title: "獎品發放名冊",
+                content: "<ul><li>預算上限：每位學童最高 500 元。</li><li>需造冊確認約 10~20 位獲獎小朋友名單。</li></ul>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        title: "最後一次核銷 (總務)",
+        children: [
+          {
+            title: "試算表整理",
+            children: [
+              {
+                title: "分類登記",
+                content: "<ul><li>將所有發票依類別分開登記。</li><li>黏存單右上角寫上對應的流水編號。</li></ul>"
+              },
+              {
+                title: "營期餐費全聯發票",
+                content: "<div class='highlight-box'>全聯大張發票拆帳規則</div><ul><li>計算總餐數，每餐固定扣除 <strong>1,440 元</strong>。</li><li>無法整除的餘額單獨拆開核銷。</li></ul>"
+              }
+            ]
+          },
+          {
+            title: "黏存單實作",
+            children: [
+              {
+                title: "黏貼數量與排版",
+                content: "<ul><li>同類別發票貼同一張。</li><li>每張最多貼 <strong>10 張</strong>發票。</li><li>由左至右橫向黏貼，最多並排 <strong>3 張</strong>，不可重疊遮蔽字樣。</li><li>大型單據（收據、估價單、A4名冊）貼在最底層。</li></ul>"
+              },
+              {
+                title: "塗改處蓋章",
+                content: "<div class='highlight-box'>⚠️ 塗改防呆</div><ul><li>任何寫錯塗改的地方，經辦人必須在旁邊<strong>重新簽名或蓋私章</strong>。</li></ul>"
+              }
+            ]
+          },
+          {
+            title: "各類發票規定",
+            children: [
+              {
+                title: "教案教具",
+                content: "<ul><li>必須寫清楚是「哪個教案」（例：不可只寫烹飪，以免被當成餐費）。</li><li>發票明細若僅印「文具」，必須手寫補齊具體品項（如：剪刀）。</li></ul>"
+              },
+              {
+                title: "籌會茶水 / 餐費",
+                content: "<ul><li>必須附上人員名單！包含：日期、時間、人數、發票號碼、與會人員全名。</li><li>收據則免填發票號碼。</li></ul>"
+              },
+              {
+                title: "交通車票",
+                content: "<ul><li><strong>火車：</strong>實體票根全額核銷。</li><li><strong>高鐵：</strong>僅能核銷同區間的「火車票價」額度。</li><li><strong>計程車：</strong>必須有收據（車號、司機姓名）。</li><li>計程車事由：北車到住家寫 <code>載大型教具</code>；新營到頂洲寫 <code>載營期四日餐食材料</code>。</li></ul>"
+              }
+            ]
+          },
+          {
+            title: "預算代碼",
+            children: [
+              {
+                title: "課外組補助款",
+                content: "<ul><li>代碼：<strong>115TM02-3011</strong></li><li>額度：10,000 元</li><li>時機：出隊後，挑選金額最高、最大筆的黏存單優先使用。</li></ul>"
+              },
+              {
+                title: "頂洲祖產",
+                content: "<ul><li>代碼：<strong>115DM00-21</strong></li><li>時機：出隊前優先使用。</li><li>或作為補助款 10,000 元用罄後的餘額補足。</li></ul>"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+
+  let currentPath = [];
+
+  function getCurrentNode() {
+    let node = mindMapData;
+    for (let index of currentPath) {
+      node = node.children[index];
+    }
+    return node;
+  }
+
+  function render() {
+    const node = getCurrentNode();
+    const dynamicContent = document.getElementById("dynamic-content");
+    const breadcrumbs = document.getElementById("breadcrumbs");
+    const backBtn = document.getElementById("back-btn-container");
+
+    // 1. 渲染麵包屑
+    let crumbHtml = `<span class="crumb ${currentPath.length === 0 ? 'active' : ''}" onclick="goToDepth(0)">🏠 首頁</span>`;
+    let tempNode = mindMapData;
+    for (let i = 0; i < currentPath.length; i++) {
+      crumbHtml += `<span class="separator">/</span>`;
+      tempNode = tempNode.children[currentPath[i]];
+      const isActive = i === currentPath.length - 1 ? 'active' : '';
+      crumbHtml += `<span class="crumb ${isActive}" onclick="goToDepth(${i + 1})">${tempNode.title}</span>`;
+    }
+    breadcrumbs.innerHTML = crumbHtml;
+
+    // 2. 渲染內容或子節點按鈕
+    dynamicContent.innerHTML = "";
+    if (node.children && node.children.length > 0) {
+      const listDiv = document.createElement("div");
+      listDiv.className = "node-list";
+      node.children.forEach((child, index) => {
+        const btn = document.createElement("button");
+        btn.className = "node-btn";
+        btn.innerText = child.title;
+        btn.onclick = () => {
+          currentPath.push(index);
+          render();
+        };
+        listDiv.appendChild(btn);
+      });
+      dynamicContent.appendChild(listDiv);
+    } else if (node.content) {
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "leaf-content";
+      contentDiv.innerHTML = node.content;
+      dynamicContent.appendChild(contentDiv);
+    }
+
+    // 3. 處理返回按鈕顯示邏輯
+    backBtn.style.display = currentPath.length > 0 ? "block" : "none";
+  }
+
+  function goBack() {
+    if (currentPath.length > 0) {
+      currentPath.pop();
+      render();
     }
   }
 
-  function copyText(text, msg) {
-    navigator.clipboard.writeText(text).then(() => {
-      alert(msg || '已複製！');
+  function goToDepth(depth) {
+    if (depth < currentPath.length) {
+      currentPath = currentPath.slice(0, depth);
+      render();
+    }
+  }
+  
+  // 互動式生成與複製功能
+  function generateAndCopy() {
+    const date = document.getElementById('gen-date').value || '09/22';
+    const name = document.getElementById('gen-name').value || '潘依慈';
+    const item = document.getElementById('gen-item').value || '麥當勞';
+    const amount = document.getElementById('gen-amount').value || '955';
+    
+    // 組裝字串：日期 姓名（隊費） 摘要 金額元
+    const textToCopy = `${date} ${name}（隊費） ${item} ${amount}元`;
+    
+    // 寫入剪貼簿
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      alert('✅ 已經複製成功！您可以直接前往 DC 貼上。\n\n複製內容：' + textToCopy);
+    }).catch(err => {
+      alert('❌ 複製失敗，請手動複製以下文字：\n\n' + textToCopy);
     });
   }
+
+  // 初始化渲染
+  render();
 </script>
 </body>
 </html>
