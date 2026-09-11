@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>台南頂洲隊 · 總務核銷互動指南</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #eff6ff;
+      --accent: #2563eb;
+      --warning: #d97706;
+      --warning-bg: #fffbeb;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --card-bg: #ffffff;
+      --border: #e5e7eb;
+      --border-radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Noto Sans TC", sans-serif; }
+    body { background: #f8fafc; color: var(--text); line-height: 1.6; padding: 1.5rem 1rem 4rem; }
+    .container { max-width: 760px; margin: 0 auto; }
+
+    header { text-align: center; margin-bottom: 2rem; }
+    h1 { font-size: 1.75rem; color: var(--primary); margin-bottom: 0.25rem; }
+    .subtitle { color: var(--muted); font-size: 0.95rem; font-weight: 500; }
+
+    /* 頂部統編強提醒 */
+    .tax-banner {
+      background: var(--warning-bg);
+      border: 1.5px solid #fde68a;
+      border-radius: var(--border-radius);
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.75rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .tax-text { font-size: 0.95rem; color: #92400e; font-weight: 600; }
+    .tax-code-box {
+      background: #ffffff;
+      border: 1.5px dashed var(--warning);
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #b45309;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .tax-code-box:hover { background: #fef3c7; }
+
+    /* 身分切換分頁 */
+    .tabs {
+      display: flex;
+      background: #e2e8f0;
+      padding: 4px;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 0.75rem;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .tab-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* 步驟流程引導卡片 */
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .section-card h2 { font-size: 1.15rem; margin-bottom: 1rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem; }
+
+    .step-list { list-style: none; counter-reset: step-counter; }
+    .step-item {
+      position: relative;
+      padding-left: 2.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .step-item:last-child { margin-bottom: 0; }
+    .step-item::before {
+      counter-increment: step-counter;
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1.75rem;
+      height: 1.75rem;
+      background: var(--primary-light);
+      color: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    /* 複製格式區塊 */
+    .copy-box {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-top: 0.5rem;
+      position: relative;
+      font-size: 0.875rem;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    /* 分類下拉/按鈕選擇器 */
+    .category-chips {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .chip-btn {
+      padding: 0.65rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      text-align: center;
+      transition: 0.15s;
+    }
+    .chip-btn.active {
+      background: var(--primary-light);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* 動態指南詳情面板 */
+    .cat-detail {
+      display: none;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .cat-detail.active { display: block; }
+    .cat-detail h3 { font-size: 1.05rem; margin-bottom: 0.75rem; color: var(--text); }
+    .alert-box {
+      background: var(--danger-bg);
+      border-left: 4px solid var(--danger);
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      color: #991b1b;
+      margin-bottom: 0.75rem;
+      border-radius: 4px;
+    }
+
+    /* 檢查清單互動 Checkbox */
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .checklist-item:last-child { border-bottom: none; }
+    .checklist-item input { margin-top: 0.25rem; width: 1.15rem; height: 1.15rem; cursor: pointer; }
+    .checklist-item.checked span { text-decoration: line-through; color: var(--muted); }
+
+    /* 表格 */
+    table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; font-size: 0.875rem; }
+    th, td { border: 1px solid var(--border); padding: 0.6rem; text-align: left; }
+    th { background: #f1f5f9; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>總務核銷互動指南</h1>
+    <div class="subtitle">國立政治大學 · 台南頂洲隊</div>
+  </header>
+
+  <!-- 頂部統編防呆按鈕 -->
+  <div class="tax-banner">
+    <div class="tax-text">⚠️ 購買時務必索取統編：</div>
+    <div class="tax-code-box" onclick="copyText('03807654', '已複製政大統編！')">
+      <span>03807654</span>
+      <span style="font-size:0.75rem; font-weight:normal; color:var(--muted)">點擊複製</span>
+    </div>
+  </div>
+
+  <!-- 身分切換分頁 -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('member')">🙋 我是隊員（買完報帳）</button>
+    <button class="tab-btn" onclick="switchTab('admin')">📋 我是總務（黏存單整理）</button>
+  </div>
+
+  <!-- 分頁 1：一般隊員流程 -->
+  <div id="tab-member" class="tab-content active">
+    <div class="section-card">
+      <h2>📸 買完馬上做（發票處理 4 步驟）</h2>
+      <ol class="step-list">
+        <li class="step-item">
+          <strong>抄寫發票號碼</strong>：統一發票上請手寫重抄一次發票號碼（避免熱感應字體淡化）。
+        </li>
+        <li class="step-item">
+          <strong>寫上本名</strong>：於發票空白處簽上自己的全名。
+        </li>
+        <li class="step-item">
+          <strong>標註類別</strong>：寫上該筆發票對應的核銷類別（可參考下方類別）。
+        </li>
+        <li class="step-item">
+          <strong>拍照並上傳 DC 核銷相簿</strong>
+          <div class="copy-box">
+            <button class="copy-btn" onclick="copyText('09/22 潘依慈（隊費） 麥當勞 955元', '已複製格式範例')">複製範例</button>
+            <strong>上傳格式：</strong><br>
+            <code>日期 支出人（隊費） 買了什麼 金額</code><br>
+            <span style="color:var(--muted)">例：09/22 潘依慈（隊費） 麥當勞 955元</span>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <!-- 類別互動展開 -->
+    <div class="section-card">
+      <h2>🔍 選擇你的消費項目（查看特殊規定）</h2>
+      <div class="category-chips">
+        <button class="chip-btn active" onclick="showCategory('tea')">🍵 籌會茶水</button>
+        <button class="chip-btn" onclick="showCategory('lesson')">📚 教案教具</button>
+        <button class="chip-btn" onclick="showCategory('gift')">🎁 獎品禮品</button>
+        <button class="chip-btn" onclick="showCategory('meal')">🍱 營期餐費</button>
+        <button class="chip-btn" onclick="showCategory('traffic')">🚆 交通車票</button>
+      </div>
+
+      <!-- 籌會茶水 -->
+      <div id="cat-tea" class="cat-detail active">
+        <h3>🍵 籌會茶水核銷規範</h3>
+        <div class="alert-box">🚨 課外組規定：籌會餐飲必須檢附「詳細與會人員名單」！</div>
+        <p style="font-size:0.9rem; margin-bottom:0.5rem;"><strong>必填資訊：</strong>名單、人數、日期、時間、金額、發票號碼（收據則免填發票號碼）。</p>
+        <div class="copy-box">
+          <button class="copy-btn" onclick="copyText('09/22 籌會茶水 19:30–21:30 955元\n人數：12人 發票號碼：SC-20985342\n名單：', '已複製茶水格式')">複製範本</button>
+          <strong>填寫範例：</strong><br>
+          09/22 籌會茶水 19:30–21:30 955元<br>
+          人數：12人 發票號碼：SC-20985342<br>
+          名單：鄭允妍 汪吟樺 周銘嵩 林潔希 潘依慈 林峻右...
+        </div>
+      </div>
+
+      <!-- 教案教具 -->
+      <div id="cat-lesson" class="cat-detail">
+        <h3>📚 教案教具規範</h3>
+        <div class="alert-box">⚠️ 請寫「烹飪教案」而非僅寫「烹飪」，避免被學校會計誤判為餐費！</div>
+        <ul style="font-size:0.9rem; padding-left:1.2rem;">
+          <li>務必寫清楚是<strong>哪個教案</strong>買的（例如：中自然、高藝術）。</li>
+          <li>檢查發票明細：若發票只打印「文具」，需拿原子筆在發票空白處手寫補上具體品項（如：剪刀、封箱膠帶）。</li>
+        </ul>
+      </div>
+
+      <!-- 獎品禮品 -->
+      <div id="cat-gift" class="cat-detail">
+        <h3>🎁 獎品 / 禮品規範</h3>
+        <div class="alert-box">🚨 禮品需附致贈名單；獎品需附小朋友得獎名單！</div>
+        <table>
+          <tr><th>項目</th><th>報帳上限</th><th>必備附件</th></tr>
+          <tr><td>貴賓禮品</td><td>最多 2 份 × 500元</td><td>致贈名單（對象、活動、時間、地點、緣由）</td></tr>
+          <tr><td>小朋友獎品</td><td>每位小朋友上限 500元</td><td>得獎小朋友名單</td></tr>
+        </table>
+      </div>
+
+      <!-- 營期餐費 -->
+      <div id="cat-meal" class="cat-detail">
+        <h3>🍱 營期餐費規範</h3>
+        <div class="alert-box">🚨 必須附上用餐人員名單！收據不需要填發票號碼。</div>
+        <p style="font-size:0.9rem; margin-top:0.5rem;"><strong>全聯發票計算（總務特別注意）：</strong></p>
+        <p style="font-size:0.85rem; color:var(--muted)">1. 總共 n 餐 2. 每餐扣 1440 元，剩餘部分單獨核銷。<br>（例：5000 元發票 → 三餐 1440 元貼發票 1，剩餘金額分別拆開核銷）</p>
+      </div>
+
+      <!-- 交通車票 -->
+      <div id="cat-traffic" class="cat-detail">
+        <h3>🚆 交通車票規範</h3>
+        <div class="alert-box">⚠️ 搭完車立刻將「實體票根」交給總務，不要各自保管以免遺失！</div>
+        <ul style="font-size:0.875rem; padding-left:1.2rem;">
+          <li><strong>火車：</strong>可全額核銷。</li>
+          <li><strong>高鐵：</strong>只能核銷同區間火車票價（新營－終點）。若搭高鐵請申請電子搭乘紀錄。</li>
+          <li><strong>計程車：</strong>需收據、車牌號碼、司機全名。<br>
+            事由請寫標準字樣：<br>
+            • 台北到北車：<code>載大型教具</code><br>
+            • 新營到頂洲：<code>載營期四日餐食材料</code>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 分頁 2：總務行政流程 -->
+  <div id="tab-admin" class="tab-content">
+    <div class="section-card">
+      <h2>📌 預算科目代碼速查</h2>
+      <table>
+        <tr><th>預算項目</th><th>會計代碼</th><th>使用時機</th></tr>
+        <tr><td>頂洲祖產</td><td><code>115DM00-21</code></td><td>出隊前優先使用</td></tr>
+        <tr><td>課外組補助款</td><td><code>115TM02-3011</code></td><td>出隊後，金額最高的黏存單使用補助款＋祖產</td></tr>
+      </table>
+    </div>
+
+    <div class="section-card">
+      <h2>📄 黏存單填寫與黏貼規則</h2>
+      <ul style="font-size:0.9rem; padding-left:1.2rem; margin-bottom:1rem;">
+        <li><strong>同類別才能貼同一張</strong>，每張黏存單最多貼 <strong>10 張</strong>發票。</li>
+        <li><strong>左到右最多 3 張</strong>（橫向排列），彼此不要重疊遮蔽字樣。</li>
+        <li>大張收據黏在最底下最後面。</li>
+        <li><strong>塗改防呆：</strong>任何地方只要塗改修正，經手人<strong>必須在旁邊重新簽名</strong>！</li>
+      </ul>
+    </div>
+
+    <!-- 核銷勾選清單 -->
+    <div class="section-card">
+      <h2>✅ 出件前最終檢查清單</h2>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <span>發票均已完成分類，且每張黏存單未超過 10 張同類發票</span>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <span>每張發票上皆有手寫發票號碼、支出人簽名</span>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <span>試算表已登記完成，黏存單右上角已標註對應編號</span>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <span>茶水與餐費均已檢附「詳細出席人員名單」</span>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <span>禮品/獎品均已附上對應之致贈名單或得獎學生清冊</span>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <span>黏存單清冊已填寫完畢，有塗改處皆已蓋章/簽名</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(type) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    if(type === 'member') {
+      document.querySelectorAll('.tab-btn')[0].classList.add('active');
+      document.getElementById('tab-member').classList.add('active');
+    } else {
+      document.querySelectorAll('.tab-btn')[1].classList.add('active');
+      document.getElementById('tab-admin').classList.add('active');
+    }
+  }
+
+  function showCategory(catId) {
+    document.querySelectorAll('.chip-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.cat-detail').forEach(d => d.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('cat-' + catId).classList.add('active');
+  }
+
+  function copyText(text, msg) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert(msg || '已複製至剪貼簿！');
+    });
+  }
+
+  function toggleCheck(el) {
+    const cb = el.querySelector('input');
+    if (event.target !== cb) cb.checked = !cb.checked;
+    el.classList.toggle('checked', cb.checked);
+  }
+</script>
+</body>
+</html>
